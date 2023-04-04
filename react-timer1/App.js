@@ -4,8 +4,8 @@ import { View, Text, Pressable, StyleSheet, TextInput } from 'react-native';
 const Countdown = () => {
   const [basis, setBasis] = useState();
   const [timer, setTimer] = useState();
-  const [textInput, setTextInput] = useState();
-  const [timerDisp, setTimerDisp] = useState(0);
+  const [timerInput, setTimerInput] = useState(10);
+  const [timerDisp, setTimerDisp] = useState(10);
   const [intervalId, setIntervalId] = useState()
 
   useEffect(() => {
@@ -37,44 +37,56 @@ const Countdown = () => {
     }
   }, [timerDisp])
 
+  function timerInputHandler(enteredText) {
+    setTimerInput(enteredText);
+    clearInterval(intervalId);
+  };
+
   return (
-    <View>
-      <Text>{timerDisp}</Text>
-      <Pressable
+    <View style={styles.container}>
+      <Pressable style={styles.timerPressable}
         onPress ={() => {
           var t = new Date();
-          t.setSeconds(t.getSeconds() + 50);
-          setBasis(t.valueOf());
+          setBasis(t.valueOf() + timerInput * 1000);
         }}
       >
-        <Text style={styles.timerText}>{`Start 10s timer: ${timerDisp}`}</Text>
+        <Text style={styles.timerText}>{`Start ${timerInput} s timer:\n ${timerDisp}`}</Text>
       </Pressable>
-      <TextInput style={styles.input} placeholder='Set timer here:'>{textInput}</TextInput>
-      {/* <Button>reset timer</Button> */}
+      <TextInput style={styles.input} placeholder='Set timer here:' onChangeText={timerInputHandler} value={timerInput}/>
     </View>
   )
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+
   timerText: {
-    padding: 30,
+    padding: 20,
     backgroundColor: '#FFC0CB',
     display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+  },
+
+  timerPressable: {
+    width: 200
   },
 
   input: {
-    display: 'flex',
-    justifyContent: 'center',
     borderRadius: 8,
     borderColor: '#F0F0F0',
     borderWidth: 2,
-    alignContent: 'center',
+    width: 200,
     height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    // marginHorizontal: 4,
-    // marginVertical: 16
   },
 })
 
